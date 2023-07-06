@@ -9,14 +9,14 @@ const Tables = () => {
                 cartTables.map(table => <li
                     onClick={() => {
                         setActiveTable(table);
-                        console.log('current active table', table.cart_table_name)
+                        // console.log('current active table', table.cart_table_name)
                     }}
                     key={table.id}>
                     <img
                         className="w-50"
-                        src="/public/img/dine-table.png"
+                        src="assets/dine-table.png"
                         alt="" />
-                    {table.cart_table_name}
+                    {table.id   }
                 </li>)
             }
         </>

@@ -15,9 +15,7 @@ const Product: FC<ProductProps> = ({ product }) => {
             <Link
                 onClick={(e) => {
                     e.preventDefault();
-                    // handleAddToCart(id, Item_Rate, Item_Name)
                     addToCart(id, Item_Rate, Item_Name)
-                    // console.log(id, Item_Name, Item_Rate)
                 }}
                 to="#"
                 className="active">

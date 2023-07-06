@@ -3,7 +3,13 @@ import { useCartContext } from "../../context";
 import { ICartItem } from "../../types";
 
 const CartTable = () => {
-    const { cartTables, activeTable, increaseQty, decreaseQty, removeFromCart } = useCartContext();
+    const {
+        cartTables,
+        activeTable,
+        removeFromCart,
+        incrementCartItemQuantity,
+        decrementCartItemQuantity
+    } = useCartContext();
     const [items, setItems] = useState<ICartItem[] | null>(null);
 
     const get_active_products = () => {
@@ -44,15 +50,15 @@ const CartTable = () => {
 
                                 <td className="d-flex">
                                     <button
-                                        onClick={() => decreaseQty(item.itemmaster_id)}
+                                        onClick={() => decrementCartItemQuantity(item.itemmaster_id)}
                                         className="btn mx-5">-</button>
                                     {item.quantity}
                                     <button
-                                        onClick={() => increaseQty(item.itemmaster_id)}
+                                        onClick={() => incrementCartItemQuantity(item.itemmaster_id)}
                                         className="btn mx-5">+</button>
                                 </td>
 
-                                <td>{item.quantity}</td>
+                                <td>{item.product_price}</td>
 
                                 <td>
 

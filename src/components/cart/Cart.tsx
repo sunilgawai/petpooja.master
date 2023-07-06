@@ -40,6 +40,20 @@ const Cart: FC = () => {
         }
     }, [orderForm])
 
+    useEffect(() => {
+        const get_active_cart_total = () => {
+            const _Active = cartTables.find(table => {
+                return table.id === activeTable.id;
+            })
+            if (!_Active) {
+                set_Cart_Total(0);
+                return;
+            }
+            set_Cart_Total(_Active?.Cart?.total_price)
+        }
+        get_active_cart_total();
+    }, [cartTables, activeTable])
+
 
     const handleOrderForm = (event: any) => {
         const { name, value } = event.target;
@@ -93,16 +107,6 @@ const Cart: FC = () => {
         return activeTable.Cart.total_price
     }
 
-    const get_active_cart_total = () => {
-        const _Active = cartTables.find(table => {
-            return table.id === activeTable.id;
-        })
-        if (!_Active) {
-            set_Cart_Total(0);
-            return;
-        }
-        set_Cart_Total(_Active?.Cart?.total_price)
-    }
 
     return (
         <div className="tab-pane fade active show" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
@@ -128,7 +132,7 @@ const Cart: FC = () => {
 
             <div onClick={() => setOpen(!open)} className={`${open ? 'open' : ''} bottom-select-menu`}>
                 <div className="menu-total">
-                    <a href="#" className="btn">Spit</a>
+                    <Link to="#" className="btn">Spit</Link>
                     <div className="total-text">Total <span>{cart_total}</span></div>
                 </div>
 
