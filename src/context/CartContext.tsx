@@ -74,9 +74,17 @@ const CartContextProvider = ({ children }: { children: ReactNode }) => {
                         });
                     }
 
+                    // updatedCartItems.forEach((item) => {
+                    //     const itemQuantity = item?.quantity || 0; // Handle undefined or null values
+                    //     const itemPrice = item?.product_price || 0; // Handle undefined or null values
+                    //     totalPrice += itemQuantity * itemPrice;
+                    //     console.log("total", totalPrice);
+                    // });
+
                     updatedCartItems.forEach((item) => {
-                        totalPrice += item.quantity * item.product_price!
-                    });
+                        totalPrice += item?.quantity * item?.product_price
+                        console.log("total", totalPrice)
+                    // });
 
                     return {
                         ...table,
