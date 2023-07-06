@@ -74,7 +74,7 @@ export interface ICartItem {
     id?: number;
     cart_id?: number;
     itemmaster_id: number;
-    product_price?: number
+    product_price: number
     quantity: number;
     name: string
 }

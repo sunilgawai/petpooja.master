@@ -33,8 +33,9 @@ const CartContextProvider = ({ children }: { children: ReactNode }) => {
     useEffect(() => {
         const _active = cartTables.find(table => table.id === activeTable.id);
         if (!_active || !_active.Cart) return;
-        // console.log("active table", _active)
-        ApiService.setCart(_active).then(res => console.log(res.data)).catch(error => console.log(error))
+        console.log("active table", _active)
+
+        // ApiService.setCart(_active).then(res => console.log(res.data)).catch(error => console.log(error))
     }, [cartTables])
 
     useEffect(() => {
@@ -95,18 +96,25 @@ const CartContextProvider = ({ children }: { children: ReactNode }) => {
     const incrementCartItemQuantity = (product_id: number) => {
         setCartTables((prev_tables) => {
             return prev_tables.map((table: ITable) => {
-                if (table.id === activeTable?.id) {
-                    const updatedCartItems = table.Cart?.Cart_items.map((item) => {
-                        if (item.itemmaster_id === product_id) {
-                            return {
-                                ...item,
-                                quantity: item.quantity + 1,
-                            };
-                        }
-                        return item;
-                    });
+                let updatedCartItems: ICartItem[] = [];
+                let totalPrice = 0;
 
-                    const totalPrice = calculateTotalPrice(updatedCartItems);
+                if (table.id === activeTable?.id) {
+                    if (table.Cart?.Cart_items) {
+                        updatedCartItems = table.Cart.Cart_items.map((item) => {
+                            if (item.itemmaster_id === product_id) {
+                                return {
+                                    ...item,
+                                    quantity: item.quantity + 1,
+                                };
+                            }
+                            return item;
+                        });
+                    }
+
+                    updatedCartItems.forEach((item) => {
+                        totalPrice += (item.quantity || 0) * (item.product_price || 0);
+                    });
 
                     return {
                         ...table,
@@ -120,6 +128,33 @@ const CartContextProvider = ({ children }: { children: ReactNode }) => {
                 return table;
             });
         });
+        // setCartTables((prev_tables) => {
+        //     return prev_tables.map((table: ITable) => {
+        //         if (table.id === activeTable?.id) {
+        //             const updatedCartItems = table.Cart?.Cart_items.map((item) => {
+        //                 if (item.itemmaster_id === product_id) {
+        //                     return {
+        //                         ...item,
+        //                         quantity: item.quantity + 1,
+        //                     };
+        //                 }
+        //                 return item;
+        //             });
+
+        //             const totalPrice = calculateTotalPrice(updatedCartItems);
+
+        //             return {
+        //                 ...table,
+        //                 Cart: {
+        //                     ...table.Cart,
+        //                     Cart_items: updatedCartItems,
+        //                     total_price: totalPrice,
+        //                 },
+        //             };
+        //         }
+        //         return table;
+        //     });
+        // });
     };
 
     // decrese the total price & cart item quantity.
@@ -155,9 +190,9 @@ const CartContextProvider = ({ children }: { children: ReactNode }) => {
 
     // This function is being called in other functions.
     const calculateTotalPrice = (cartItems: ICartItem[]): number => {
-        let totalPrice = 0;
-        cartItems.forEach((item) => {
-            totalPrice += item.quantity * item.product_price!
+        let totalPrice: number = 0;
+        cartItems.forEach((item: ICartItem) => {
+            totalPrice += item.quantity * item.product_price;
         });
         return totalPrice;
     };

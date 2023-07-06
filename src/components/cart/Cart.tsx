@@ -45,17 +45,18 @@ const Cart: FC = () => {
     }, [orderForm])
 
     useEffect(() => {
-        const get_active_cart_total = () => {
-            const _Active = cartTables.find(table => {
-                return table.id === activeTable.id;
-            })
-            if (!_Active) {
-                set_Cart_Total(0);
-                return;
-            }
-            set_Cart_Total(_Active?.Cart?.total_price)
-        }
-        get_active_cart_total();
+        // const get_active_cart_total = () => {
+        //     const _Active = cartTables.find(table => {
+        //         return table.id === activeTable.id;
+        //     })
+        //     if (!_Active) {
+        //         set_Cart_Total(0);
+        //         return;
+        //     }
+        //     set_Cart_Total(_Active?.Cart?.total_price)
+        // }
+        // get_active_cart_total();
+        set_Cart_Total(activeTable?.Cart?.total_price)
     }, [cartTables, activeTable])
 
 
@@ -99,7 +100,12 @@ const Cart: FC = () => {
             <div onClick={() => setOpen(!open)} className={`${open ? 'open' : ''} bottom-select-menu`}>
                 <div className="menu-total">
                     <Button to="#" text="Split" />
-                    <div className="total-text">Total <span>{cart_total ?? 0}</span></div>
+                    <div className="total-text">
+                        Total
+                        <span>
+                            {cart_total} | 0
+                        </span>
+                    </div>
                 </div>
 
                 <div className="menu-radio">
@@ -123,7 +129,8 @@ const Cart: FC = () => {
                 <div className="menu-check-box">
                     <Check
                         id="payment_status" name="payment_status"
-                        value="0" checked={activeTable?.Cart?.payment_status === '1'} handleCheck={updateCartPaymentStatus} />
+                        value="0"
+                        checked={activeTable?.Cart?.payment_status === '1'} handleCheck={updateCartPaymentStatus} />
                 </div>
 
                 <div className="menu-button">

@@ -16,6 +16,7 @@ const Product: FC<ProductProps> = ({ product }) => {
                 onClick={(e) => {
                     e.preventDefault();
                     addToCart(id, Item_Rate, Item_Name)
+                    console.log(id, Item_Name, Item_Rate)
                 }}
                 to="#"
                 className="active">
