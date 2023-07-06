@@ -5,12 +5,15 @@ import CartTable from "./CartTable";
 import { IOrderForm, ITable } from "../../types";
 import CustomerDetails from "../delivery/CustomerDetails";
 import { Link } from "react-router-dom";
+import Button from "./utils/Button";
+import Radio from "./utils/Radio";
+import Check from "./utils/Check";
 
 const Cart: FC = () => {
     const { activeTable, cartTables } = useCartContext();
     const [selectedTable, setSelectedTable] = useState<ITable>({} as ITable);
-    const [cart_total, set_Cart_Total] = useState<number>(0);
-    const [open, setOpen] = useState(false); // For Cart Controller Bottom.
+    const [cart_total, set_Cart_Total] = useState<number>(0); // Cart Total Amount.
+    const [open, setOpen] = useState(false); // For Cart Controller visiblity.
     const [orderDisabled, setOrderDisabled] = useState(true);
     const [orderForm, setOrderForm] = useState<IOrderForm>({
         shop_code: 'XXX',
@@ -100,14 +103,6 @@ const Cart: FC = () => {
     }
 
 
-    const getTotal = () => {
-        if (!activeTable || !activeTable.Cart || !activeTable.Cart.total_price) {
-            return 0;
-        }
-        return activeTable.Cart.total_price
-    }
-
-
     return (
         <div className="tab-pane fade active show" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
             {/* Navigation tabs for cart. */}
@@ -118,10 +113,10 @@ const Cart: FC = () => {
                     {/* <li><img src="/public/img/dine-icon01.png" alt="" /></li> */}
                     <li>
                         <img data-bs-toggle="modal" data-bs-target="#staticBackdrop"
-                            src="/public/img/dine-icon02.png" alt="" />
+                            src="assets/dine-icon02.png" alt="" />
                     </li>
-                    <li><img src="/public/img/dine-icon03.png" alt="" /></li>
-                    <li><img src="/public/img/dine-icon04.png" alt="" /></li>
+                    <li><img src="assets/dine-icon03.png" alt="" /></li>
+                    <li><img src="assets/dine-icon04.png" alt="" /></li>
                 </ul>
                 <div className="dine-button"><Link to="#" className="btn">Dine In</Link></div>
             </div>
@@ -130,89 +125,31 @@ const Cart: FC = () => {
             <CustomerDetails handleOrderForm={handleOrderForm} />
             <CartTable />
 
+            {/* Bottom Cart Controller  */}
             <div onClick={() => setOpen(!open)} className={`${open ? 'open' : ''} bottom-select-menu`}>
                 <div className="menu-total">
-                    <Link to="#" className="btn">Spit</Link>
-                    <div className="total-text">Total <span>{cart_total}</span></div>
+                    <Button to="#" text="Split" />
+                    <div className="total-text">Total <span>{cart_total ?? 0}</span></div>
                 </div>
 
                 <div className="menu-radio">
-                    <label className="radio">
-                        <input type="radio"
-                            id="CASH"
-                            name="payment_method"
-                            value="CASH"
-                            onChange={handleOrderForm}
-                        />
-                        <span>Cash</span>
-                    </label>
-
-                    <label className="radio">
-                        <input type="radio"
-                            id="CARD"
-                            name="payment_method"
-                            value="CARD"
-                            onChange={handleOrderForm}
-                        />
-                        <span>Card</span>
-                    </label>
-                    <label className="radio">
-                        <input type="radio"
-                            id="DUE"
-                            name="payment_method"
-                            onChange={handleOrderForm}
-                            value="DUE"
-                        />
-                        <span>Due</span>
-                    </label>
-
-                    <label className="radio">
-                        <input type="radio"
-                            id="OTHER"
-                            name="payment_method"
-                            onChange={handleOrderForm}
-                            value="OTHER"
-                        />
-                        <span>Other</span>
-                    </label>
-                    <label className="radio">
-                        <input type="radio"
-                            id="PART"
-                            name="payment_method"
-                            value="PART"
-                            onChange={handleOrderForm}
-                        />
-                        <span>Part</span>
-                    </label>
+                    <Radio id="CASH" name="payment_method" value="CASH" text="Cash" />
+                    <Radio id="CARD" name="payment_method" value="CARD" text="Card" />
+                    <Radio id="DUE" name="payment_method" value="DUE" text="Due" />
+                    <Radio id="OTHER" name="payment_method" value="OTHER" text="Other" />
+                    <Radio id="PART" name="payment_method" value="PART" text="Part" />
                 </div>
 
                 <div className="menu-check-box">
-                    <label className="checkbox">
-                        <input
-                            type="checkbox"
-                            id="payment_status"
-                            name="payment_status"
-                            value="1" // 1 as true
-                            onChange={(e) => {
-                                handleOrderForm(e);
-                                handleOrderPlace();
-                            }}
-                        />
-                        <span>It's Paid</span>
-                    </label>
+                    <Check id="payment_status" name="payment_status" value="1" checked={false} />
                 </div>
 
                 <div className="menu-button">
-                    <a href="#" className="btn gray-color mx-2">Save Print</a>
-                    <a href="#" className="btn gray-color mx-2">Save &eBill</a>
-                    <a
-                        href="#"
-                        onClick={() => handleOrderPlace()}
-                        className="btn gray-color mx-2">
-                        Order Now
-                    </a>
-                    <a href="#" className="btn gray-color mx-2">KOT & Print </a>
-                    <a href="#" className="btn gray-color mx-2">Hold</a>
+                    <Button to="#" text="Save Print" />
+                    <Button to="#" text="Save & eBill" />
+                    <Button to="#" text="Order Now" />
+                    <Button to="#" text="KOT & Print" />
+                    <Button to="#" text="Hold" />
                 </div>
             </div>
         </div >

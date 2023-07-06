@@ -25,6 +25,7 @@ const CartTable = () => {
 
     useEffect(() => {
         get_active_products();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [activeTable, cartTables])
 
 
