@@ -112,13 +112,14 @@ const CartContextProvider = ({ children }: { children: ReactNode }) => {
             });
         });
     };
-    // to be Checked
+    
+    // decrese the total price & cart item quantity.
     const decrementCartItemQuantity = (product_id: number) => {
         setCartTables((prev_tables) => {
             return prev_tables.map((table: ITable) => {
                 if (table.id === activeTable?.id) {
                     const updatedCartItems = table.Cart?.Cart_items.map((item) => {
-                        if (item.itemmaster_id === product_id) {
+                        if (item.itemmaster_id === product_id && item.quantity > 1) {
                             return {
                                 ...item,
                                 quantity: item.quantity - 1,
