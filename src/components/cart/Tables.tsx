@@ -9,7 +9,7 @@ const Tables = () => {
                 cartTables.map(table => <li
                     onClick={() => {
                         setActiveTable(table);
-                        // console.log('current active table', table.cart_table_name)
+                        console.log('current active table', table?.Cart)
                     }}
                     key={table.id}>
                     <img

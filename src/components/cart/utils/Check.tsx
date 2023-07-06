@@ -5,18 +5,19 @@ type CheckButtonProps = {
     name: string;
     value: string;
     checked: boolean;
-    onChange?: (checked: boolean) => void
+    handleCheck?: (checked: string) => void
 }
 
-const Check: FC<CheckButtonProps> = () => {
+const Check: FC<CheckButtonProps> = ({ id, name, value, checked, handleCheck }) => {
     return (
         <label className="checkbox">
             <input
                 type="checkbox"
-                id="payment_status"
-                name="payment_status"
-                value="1" // 1 as true
-                onChange={(e) => {
+                id={id}
+                name={name}
+                value={value}
+                onChange={() => {
+                    handleCheck && handleCheck(value ? '1' : '0');
                 }}
             />
             <span>It's Paid</span>

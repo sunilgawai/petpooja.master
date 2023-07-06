@@ -11,6 +11,8 @@ interface ICartContextProps {
     incrementCartItemQuantity: (product_id: number) => void
     decrementCartItemQuantity: (product_id: number) => void
     removeFromCart: (id: number) => void
+    updateCartPaymentMethod: (payment_method: string) => void
+    updateCartPaymentStatus: (payment_status: string) => void
 }
 
 const CartContext = createContext<ICartContextProps>({} as ICartContextProps);
@@ -29,9 +31,16 @@ const CartContextProvider = ({ children }: { children: ReactNode }) => {
     }, [])
 
     useEffect(() => {
-        setActiveTable(cartTables[0]);
-    }, [])
+        const _active = cartTables.find(table => table.id === activeTable.id);
+        if (!_active || !_active.Cart) return;
+        // console.log("active table", _active)
+        ApiService.setCart(_active).then(res => console.log(res.data)).catch(error => console.log(error))
+    }, [cartTables])
 
+    useEffect(() => {
+        setActiveTable(cartTables[0]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
 
     const addToCart = (product_id: number, product_price: number, name: string) => {
         setCartTables((prev_tables) => {
@@ -112,7 +121,7 @@ const CartContextProvider = ({ children }: { children: ReactNode }) => {
             });
         });
     };
-    
+
     // decrese the total price & cart item quantity.
     const decrementCartItemQuantity = (product_id: number) => {
         setCartTables((prev_tables) => {
@@ -143,7 +152,8 @@ const CartContextProvider = ({ children }: { children: ReactNode }) => {
             });
         });
     };
-    // to be Checked
+
+    // This function is being called in other functions.
     const calculateTotalPrice = (cartItems: ICartItem[]): number => {
         let totalPrice = 0;
         cartItems.forEach((item) => {
@@ -152,18 +162,56 @@ const CartContextProvider = ({ children }: { children: ReactNode }) => {
         return totalPrice;
     };
 
-
     const removeFromCart = (product_id: number) => {
         setCartTables((prev_tables) => {
             return prev_tables.map((table: ITable) => {
                 if (table.id === activeTable.id) {
-                    const updatedCartItems: ICartItem[] = table.Cart?.Cart_items?.filter((item) => item.itemmaster_id !== product_id);
+                    const updatedCartItems: ICartItem[] = table.Cart?.Cart_items?.filter(
+                        (item) => item.itemmaster_id !== product_id
+                    );
+
+                    const totalPrice = calculateTotalPrice(updatedCartItems);
 
                     return {
                         ...table,
                         Cart: {
                             ...table.Cart,
                             Cart_items: updatedCartItems,
+                            total_price: totalPrice,
+                        },
+                    };
+                }
+                return table;
+            });
+        });
+    };
+
+    const updateCartPaymentMethod = (payment_method: string) => {
+        setCartTables((prev_tables) => {
+            return prev_tables.map((table: ITable) => {
+                if (table.id === activeTable.id) {
+                    return {
+                        ...table,
+                        Cart: {
+                            ...table.Cart,
+                            payment_method: payment_method
+                        },
+                    };
+                }
+                return table;
+            });
+        });
+    };
+
+    const updateCartPaymentStatus = (payment_status: string) => {
+        setCartTables((prev_tables) => {
+            return prev_tables.map((table: ITable) => {
+                if (table.id === activeTable.id) {
+                    return {
+                        ...table,
+                        Cart: {
+                            ...table.Cart,
+                            payment_status: payment_status
                         },
                     };
                 }
@@ -181,7 +229,9 @@ const CartContextProvider = ({ children }: { children: ReactNode }) => {
         removeFromCart,
         addToCart,
         incrementCartItemQuantity,
-        decrementCartItemQuantity
+        decrementCartItemQuantity,
+        updateCartPaymentMethod,
+        updateCartPaymentStatus
     }}>
         {children}
     </CartContext.Provider>

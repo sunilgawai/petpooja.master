@@ -44,14 +44,8 @@ class ApiService {
 
     static setCart = (table: ITable): Promise<AxiosResponse<any, any>> => {
         return new Promise((resolve, reject) => {
-            this.apiServer.put('/api/cart', {
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${localStorage.getItem('authState')} `
-                },
-                data: {
-                    table
-                }
+            this.apiServer.post('/api/cart', {
+                table
             }).then((response) => {
                 return resolve(response);
             }).catch((err) => {
@@ -59,6 +53,8 @@ class ApiService {
             })
         })
     }
+
+
 
     static getProducts = (): Promise<AxiosResponse<any, any>> => {
         return new Promise((resolve, reject) => {

@@ -5,10 +5,10 @@ type RadioButtonProps = {
     name: string;
     value: string;
     text: string;
-    onChange?: Function;
+    handleSelect?: (payment_method: string) => void
 }
 
-const Radio: FC<RadioButtonProps> = ({ id, name, value, text, onChange }) => {
+const Radio: FC<RadioButtonProps> = ({ id, name, value, text, handleSelect }) => {
     return (
         <label className="radio">
             <input
@@ -16,9 +16,7 @@ const Radio: FC<RadioButtonProps> = ({ id, name, value, text, onChange }) => {
                 id={id}
                 name={name}
                 value={value}
-                onChange={
-                    onChange && onChange()
-                }
+                onChange={() => handleSelect && handleSelect(value)}
             />
             <span>{text}</span>
         </label>

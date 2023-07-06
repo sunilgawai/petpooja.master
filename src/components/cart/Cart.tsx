@@ -1,16 +1,17 @@
+import CustomerDetails from "../delivery/CustomerDetails";
+import { IOrderForm, ITable } from "../../types";
 import { FC, useEffect, useState } from "react";
 import { useCartContext } from "../../context";
-import Tables from "./Tables";
-import CartTable from "./CartTable";
-import { IOrderForm, ITable } from "../../types";
-import CustomerDetails from "../delivery/CustomerDetails";
+import ApiService from "../../services/ApiService";
 import { Link } from "react-router-dom";
+import CartTable from "./CartTable";
 import Button from "./utils/Button";
 import Radio from "./utils/Radio";
 import Check from "./utils/Check";
+import Tables from "./Tables";
 
 const Cart: FC = () => {
-    const { activeTable, cartTables } = useCartContext();
+    const { activeTable, cartTables, updateCartPaymentMethod, updateCartPaymentStatus } = useCartContext();
     const [selectedTable, setSelectedTable] = useState<ITable>({} as ITable);
     const [cart_total, set_Cart_Total] = useState<number>(0); // Cart Total Amount.
     const [open, setOpen] = useState(false); // For Cart Controller visiblity.
@@ -68,40 +69,9 @@ const Cart: FC = () => {
     }
 
     const handleOrderPlace = () => {
-        console.log('order values', orderForm)
-        setOrderForm({
-            ...orderForm,
-            payment_status: 'paid'
-        })
-        fetch('http://localhost:4000/api/order', {
-            // Post request.
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(orderForm)
-        }).then((response) => {
-            if (response.status === 501) {
-                alert("couldn't place order.")
-            }
-            return response.json();
-        })
-            .then((order) => {
-                fetch(`http://localhost:4000/api/cart/:${activeTable.id}`, {
-                    method: 'DELETE',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                }).then(res => res.json())
-                    .then(res => console.log(res));
-                console.log(order);
-                alert("Order created successfully.");
-            })
-            .catch((error) => {
-                console.log(error)
-            })
+        console.log("Active table", selectedTable)
+        // ApiService.setCart(activeTable).then(res => console.log(res)).catch(err => console.log(err));
     }
-
 
     return (
         <div className="tab-pane fade active show" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
@@ -133,21 +103,34 @@ const Cart: FC = () => {
                 </div>
 
                 <div className="menu-radio">
-                    <Radio id="CASH" name="payment_method" value="CASH" text="Cash" />
-                    <Radio id="CARD" name="payment_method" value="CARD" text="Card" />
-                    <Radio id="DUE" name="payment_method" value="DUE" text="Due" />
-                    <Radio id="OTHER" name="payment_method" value="OTHER" text="Other" />
-                    <Radio id="PART" name="payment_method" value="PART" text="Part" />
+                    <Radio id="CASH" name="payment_method"
+                        value="CASH" text="Cash"
+                        handleSelect={updateCartPaymentMethod} />
+                    <Radio id="CARD" name="payment_method"
+                        value="CARD" text="Card"
+                        handleSelect={updateCartPaymentMethod} />
+                    <Radio id="DUE" name="payment_method"
+                        value="DUE" text="Due"
+                        handleSelect={updateCartPaymentMethod} />
+                    <Radio id="OTHER" name="payment_method"
+                        value="OTHER" text="Other"
+                        handleSelect={updateCartPaymentMethod} />
+                    <Radio id="PART" name="payment_method"
+                        value="PART" text="Part"
+                        handleSelect={updateCartPaymentMethod} />
                 </div>
 
                 <div className="menu-check-box">
-                    <Check id="payment_status" name="payment_status" value="1" checked={false} />
+                    <Check
+                        id="payment_status" name="payment_status"
+                        value="0" checked={activeTable?.Cart?.payment_status === '1'} handleCheck={updateCartPaymentStatus} />
                 </div>
 
                 <div className="menu-button">
                     <Button to="#" text="Save Print" />
                     <Button to="#" text="Save & eBill" />
-                    <Button to="#" text="Order Now" />
+                    <Button to="#" text="Order Now"
+                        handleClick={handleOrderPlace} />
                     <Button to="#" text="KOT & Print" />
                     <Button to="#" text="Hold" />
                 </div>

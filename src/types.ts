@@ -63,8 +63,8 @@ export interface ICart {
     customer_first_name?: string;
     customer_last_name?: string;
     customer_mobile?: string;
-    payment_status?: string;
     payment_method?: string;
+    payment_status?: string;
     total_price: number;
     cart_table_id?: number;
     Cart_items: ICartItem[];
