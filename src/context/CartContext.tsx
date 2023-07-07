@@ -74,17 +74,9 @@ const CartContextProvider = ({ children }: { children: ReactNode }) => {
                         });
                     }
 
-                    // updatedCartItems.forEach((item) => {
-                    //     const itemQuantity = item?.quantity || 0; // Handle undefined or null values
-                    //     const itemPrice = item?.product_price || 0; // Handle undefined or null values
-                    //     totalPrice += itemQuantity * itemPrice;
-                    //     console.log("total", totalPrice);
-                    // });
-
                     updatedCartItems.forEach((item) => {
-                        totalPrice += item?.quantity * item?.product_price
-                        console.log("total", totalPrice)
-                    // });
+                        totalPrice += item.quantity * item.product_price!
+                    });
 
                     return {
                         ...table,
@@ -100,29 +92,22 @@ const CartContextProvider = ({ children }: { children: ReactNode }) => {
         });
     };
 
-    // to be Checked
+    // Working code.
     const incrementCartItemQuantity = (product_id: number) => {
         setCartTables((prev_tables) => {
             return prev_tables.map((table: ITable) => {
-                let updatedCartItems: ICartItem[] = [];
-                let totalPrice = 0;
-
                 if (table.id === activeTable?.id) {
-                    if (table.Cart?.Cart_items) {
-                        updatedCartItems = table.Cart.Cart_items.map((item) => {
-                            if (item.itemmaster_id === product_id) {
-                                return {
-                                    ...item,
-                                    quantity: item.quantity + 1,
-                                };
-                            }
-                            return item;
-                        });
-                    }
-
-                    updatedCartItems.forEach((item) => {
-                        totalPrice += (item.quantity || 0) * (item.product_price || 0);
+                    const updatedCartItems = table.Cart?.Cart_items.map((item) => {
+                        if (item.itemmaster_id === product_id) {
+                            return {
+                                ...item,
+                                quantity: item.quantity + 1,
+                            };
+                        }
+                        return item;
                     });
+
+                    const totalPrice = calculateTotalPrice(updatedCartItems);
 
                     return {
                         ...table,
@@ -136,33 +121,6 @@ const CartContextProvider = ({ children }: { children: ReactNode }) => {
                 return table;
             });
         });
-        // setCartTables((prev_tables) => {
-        //     return prev_tables.map((table: ITable) => {
-        //         if (table.id === activeTable?.id) {
-        //             const updatedCartItems = table.Cart?.Cart_items.map((item) => {
-        //                 if (item.itemmaster_id === product_id) {
-        //                     return {
-        //                         ...item,
-        //                         quantity: item.quantity + 1,
-        //                     };
-        //                 }
-        //                 return item;
-        //             });
-
-        //             const totalPrice = calculateTotalPrice(updatedCartItems);
-
-        //             return {
-        //                 ...table,
-        //                 Cart: {
-        //                     ...table.Cart,
-        //                     Cart_items: updatedCartItems,
-        //                     total_price: totalPrice,
-        //                 },
-        //             };
-        //         }
-        //         return table;
-        //     });
-        // });
     };
 
     // decrese the total price & cart item quantity.
