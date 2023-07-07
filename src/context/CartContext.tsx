@@ -13,6 +13,7 @@ interface ICartContextProps {
     removeFromCart: (id: number) => void
     updateCartPaymentMethod: (payment_method: string) => void
     updateCartPaymentStatus: (payment_status: string) => void
+    updateCustomerDetails: (event: any) => void
 }
 
 const CartContext = createContext<ICartContextProps>({} as ICartContextProps);
@@ -35,7 +36,7 @@ const CartContextProvider = ({ children }: { children: ReactNode }) => {
         if (!_active || !_active.Cart) return;
         console.log("active table", _active)
 
-        // ApiService.setCart(_active).then(res => console.log(res.data)).catch(error => console.log(error))
+        ApiService.setCart(_active).then(res => console.log(res.data)).catch(error => console.log(error))
     }, [cartTables])
 
     useEffect(() => {
@@ -92,7 +93,6 @@ const CartContextProvider = ({ children }: { children: ReactNode }) => {
         });
     };
 
-    // Working code.
     const incrementCartItemQuantity = (product_id: number) => {
         setCartTables((prev_tables) => {
             return prev_tables.map((table: ITable) => {
@@ -123,7 +123,6 @@ const CartContextProvider = ({ children }: { children: ReactNode }) => {
         });
     };
 
-    // decrese the total price & cart item quantity.
     const decrementCartItemQuantity = (product_id: number) => {
         setCartTables((prev_tables) => {
             return prev_tables.map((table: ITable) => {
@@ -154,7 +153,6 @@ const CartContextProvider = ({ children }: { children: ReactNode }) => {
         });
     };
 
-    // This function is being called in other functions.
     const calculateTotalPrice = (cartItems: ICartItem[]): number => {
         let totalPrice: number = 0;
         cartItems.forEach((item: ICartItem) => {
@@ -221,6 +219,23 @@ const CartContextProvider = ({ children }: { children: ReactNode }) => {
         });
     };
 
+    const updateCustomerDetails = (event: any) => {
+        const { name, value } = event.targte;
+        setCartTables((prev_tables) => {
+            return prev_tables.map((table: ITable) => {
+                if (table.id === activeTable.id) {
+                    return {
+                        ...table,
+                        Cart: {
+                            ...table.Cart,
+                            [name]: value
+                        },
+                    };
+                }
+                return table;
+            });
+        });
+    }
 
     return <CartContext.Provider value={{
         cartTables,
@@ -232,7 +247,8 @@ const CartContextProvider = ({ children }: { children: ReactNode }) => {
         incrementCartItemQuantity,
         decrementCartItemQuantity,
         updateCartPaymentMethod,
-        updateCartPaymentStatus
+        updateCartPaymentStatus,
+        updateCustomerDetails
     }}>
         {children}
     </CartContext.Provider>

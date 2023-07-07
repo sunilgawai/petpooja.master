@@ -1,8 +1,9 @@
-import CustomerDetails from "../delivery/CustomerDetails";
+import ApiService from "../../services/ApiService";
+import OrderConfirm from "./utils/OrderConfirm";
 import { IOrderForm, ITable } from "../../types";
 import { FC, useEffect, useState } from "react";
 import { useCartContext } from "../../context";
-import ApiService from "../../services/ApiService";
+import Popup from "reactjs-popup";
 import { Link } from "react-router-dom";
 import CartTable from "./CartTable";
 import Button from "./utils/Button";
@@ -45,32 +46,25 @@ const Cart: FC = () => {
     }, [orderForm])
 
     useEffect(() => {
-        // const get_active_cart_total = () => {
-        //     const _Active = cartTables.find(table => {
-        //         return table.id === activeTable.id;
-        //     })
-        //     if (!_Active) {
-        //         set_Cart_Total(0);
-        //         return;
-        //     }
-        //     set_Cart_Total(_Active?.Cart?.total_price)
-        // }
-        // get_active_cart_total();
+        const get_active_cart_total = () => {
+            const _Active = cartTables.find(table => {
+                return table.id === activeTable.id;
+            })
+            if (!_Active) {
+                set_Cart_Total(0);
+                return;
+            }
+            set_Cart_Total(_Active?.Cart?.total_price)
+        }
+        get_active_cart_total();
         set_Cart_Total(activeTable?.Cart?.total_price)
     }, [cartTables, activeTable])
 
-
-    const handleOrderForm = (event: any) => {
-        const { name, value } = event.target;
-        console.log({ name, value })
-        setOrderForm({
-            ...orderForm,
-            [name]: value
-        })
-    }
-
     const handleOrderPlace = () => {
         console.log("Active table", selectedTable)
+        const _active = cartTables.find(table => table.id === activeTable.id);
+        if (!_active || !_active.Cart) return;
+        console.log("Working tabe", _active)
         // ApiService.setCart(activeTable).then(res => console.log(res)).catch(err => console.log(err));
     }
 
@@ -92,8 +86,9 @@ const Cart: FC = () => {
                 <div className="dine-button"><Link to="#" className="btn">Dine In</Link></div>
             </div>
 
-            {/* this will receive a table. */}
-            <CustomerDetails handleOrderForm={handleOrderForm} />
+            {/* <CustomerDetails handleOrderForm={handleOrderForm} /> */}
+            {/* <OrderConfirm /> */}
+
             <CartTable />
 
             {/* Bottom Cart Controller  */}
@@ -103,7 +98,7 @@ const Cart: FC = () => {
                     <div className="total-text">
                         Total
                         <span>
-                            {cart_total} | 0
+                            {cart_total}
                         </span>
                     </div>
                 </div>
@@ -138,6 +133,9 @@ const Cart: FC = () => {
                     <Button to="#" text="Save & eBill" />
                     <Button to="#" text="Order Now"
                         handleClick={handleOrderPlace} />
+                    {/* <Popup trigger={<button> Trigger</button>} position="top center">
+                        <div className="position-absolute top-50 start-50 border border-gray">Popup content here !!</div>
+                    </Popup> */}
                     <Button to="#" text="KOT & Print" />
                     <Button to="#" text="Hold" />
                 </div>
