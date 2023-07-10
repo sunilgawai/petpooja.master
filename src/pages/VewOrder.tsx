@@ -10,7 +10,7 @@ const VewOrder = () => {
     useEffect(() => {
         if (!id) return
         ApiService.viewOrder(parseInt(id)).then(res => {
-            setOrder(res.data)
+            setOrder(res.data.data)
             console.log(res.data)
         }).catch(err => console.log(err));
     }, []);

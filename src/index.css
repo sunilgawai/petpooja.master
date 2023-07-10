@@ -3,3 +3,17 @@
 .modal-backdrop.show {
     opacity: 0;
 }
+
+.form-wrapper {
+    height: 100vh;
+    overflow-y: hidden;
+}
+
+.login {
+    /* width: 300px; */
+    height: min-content;
+    border-radius: 5px;
+    color: white;
+    padding: 20%;
+    /* background-color: rgb(240, 239, 236); */
+}

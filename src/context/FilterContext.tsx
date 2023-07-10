@@ -17,7 +17,6 @@ const filterReducer = (state: IFilterState, action: any) => {
         }
 
         case 'UPDATE_FILTERS_VALUE': {
-            console.log('paylod', action.payload)
             const { name, value } = action.payload;
             return {
                 ...state,
@@ -52,11 +51,8 @@ const filterReducer = (state: IFilterState, action: any) => {
         }
 
         case 'FILTER_PRODUCTS_BY_CATEGORY': {
-            // Filter by category is not possible at the moment due to lack of products/category data.
             let temp_products = [...state.products];
-            // let temp_categories = [...state.products];
-            console.log('temp', temp_products)
-            const { category_id } = action.payload;
+            const category_id = action.payload; 
             temp_products = temp_products.filter(product => {
                 return product.tbl_categorymaster_id === category_id;
             });
@@ -65,7 +61,6 @@ const filterReducer = (state: IFilterState, action: any) => {
                 filtered_products: temp_products
             }
         }
-
 
         default:
             return {

@@ -1,8 +1,7 @@
-import { useAppContext, useFilterContext } from "../../context";
+import { useFilterContext } from "../../context";
 import Product from "./Product";
 
 const ProductList = () => {
-  // const { filtered_products } = useAppContext();
   const { filtered_products } = useFilterContext();
 
 

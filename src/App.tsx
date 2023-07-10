@@ -11,7 +11,6 @@ import VewOrder from "./pages/VewOrder";
 
 const App = () => {
 
-
   return (
     <div>
       <AuthContextProvider>
@@ -20,10 +19,10 @@ const App = () => {
             <CartContextProvider>
               <Router>
                 <Routes>
-                  {/* <Route path="/" element={<Protected children={<Home />} />} />
-                    <Route path="/orders" element={<Protected children={<Orders />} />} /> */}
-                  <Route path="/" element={<Home />} />
-                  <Route path="/orders" element={<Orders />} />
+                  <Route path="/" element={<Protected children={<Home />} />} />
+                  <Route path="/orders" element={<Protected children={<Orders />} />} />
+                  {/* <Route path="/" element={<Home />} /> */}
+                  {/* <Route path="/orders" element={<Orders />} /> */}
                   <Route path="/orders/:id" element={<VewOrder />} />
                   <Route path="/auth/login" element={<Login />} />
                 </Routes>

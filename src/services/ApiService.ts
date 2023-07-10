@@ -7,10 +7,9 @@ class ApiService {
         headers: {
             "Content-Type": "application/json",
             Accept: "application/json",
-            Authorization: `Bearer ${localStorage.getItem("authState")}`
         },
+        withCredentials: true
     });
-
 
     static login = ({ username, password }:
         { username: string, password: string })
@@ -29,12 +28,7 @@ class ApiService {
 
     static getCart = (): Promise<AxiosResponse<any, any>> => {
         return new Promise((resolve, reject) => {
-            this.apiServer.get('/api/cart', {
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${localStorage.getItem('authState')} `
-                }
-            }).then((response) => {
+            this.apiServer.get('/api/cart').then((response) => {
                 return resolve(response);
             }).catch((err) => {
                 return reject(err)
@@ -54,16 +48,19 @@ class ApiService {
         })
     }
 
-
+    static deleteFromCart = (id: number): Promise<AxiosResponse<any, any>> => {
+        return new Promise((resolve, reject) => {
+            this.apiServer.delete(`/api/cart/item/${id}`).then((response) => {
+                return resolve(response);
+            }).catch((err) => {
+                return reject(err)
+            })
+        })
+    }
 
     static getProducts = (): Promise<AxiosResponse<any, any>> => {
         return new Promise((resolve, reject) => {
-            this.apiServer.post('/api/products', {
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${localStorage.getItem('authState')} `
-                }
-            }).then((response) => {
+            this.apiServer.get('/api/products').then((response) => {
                 return resolve(response);
             }).catch((err) => {
                 return reject(err)
@@ -73,12 +70,7 @@ class ApiService {
 
     static getCategories = (): Promise<AxiosResponse<any, any>> => {
         return new Promise((resolve, reject) => {
-            this.apiServer.post('/api/categories', {
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${localStorage.getItem('authState')} `
-                }
-            }).then((response) => {
+            this.apiServer.get('/api/categories').then((response) => {
                 return resolve(response);
             }).catch((err) => {
                 return reject(err)
@@ -88,13 +80,7 @@ class ApiService {
 
     static getOrders = (): Promise<AxiosResponse<any, any>> => {
         return new Promise((resolve, reject) => {
-            this.apiServer.get('/api/order', {
-                headers: {
-                    "Content-Type": "application/json",
-                    Accept: 'applications/json',
-                    Authorization: `Bearer ${localStorage.getItem('authState')} `
-                }
-            }).then((response) => {
+            this.apiServer.get('/api/order').then((response) => {
                 return resolve(response);
             }).catch((err) => {
                 return reject(err)
@@ -104,13 +90,7 @@ class ApiService {
 
     static viewOrder = (id: number): Promise<AxiosResponse<any, any>> => {
         return new Promise((resolve, reject) => {
-            this.apiServer.get(`/ api / order / ${id} `, {
-                headers: {
-                    "Content-Type": "application/json",
-                    Accept: 'applications/json',
-                    Authorization: `Bearer ${localStorage.getItem('authState')} `
-                }
-            }).then((response) => {
+            this.apiServer.get(`/api/order/${id} `).then((response) => {
                 return resolve(response);
             }).catch((err) => {
                 return reject(err)
