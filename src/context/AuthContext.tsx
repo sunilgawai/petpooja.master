@@ -1,38 +1,33 @@
 import { createContext, ReactNode, useEffect, useState } from "react";
+import { IAuthState } from "../types";
+import { getAuth } from "../helper";
 
-
-interface IAuthState {
-    username: string;
-    jwt_token: string;
-}
 
 interface IAuthContextProps {
-    authState: IAuthState
-    setAuthState: React.Dispatch<React.SetStateAction<IAuthState>>
+    authState: IAuthState | null
+    setAuthState: React.Dispatch<React.SetStateAction<IAuthState | null>>
 }
 
 const AuthContext = createContext<IAuthContextProps>({} as IAuthContextProps);
 
 const AuthContextProvider = ({ children }: { children: ReactNode }) => {
-    const [authState, setAuthState] = useState<IAuthState>({
-        username: "",
-        jwt_token: ""
-    });
+    const [authState, setAuthState] = useState<IAuthState | null>(null);
 
     useEffect(() => {
-        // get auth state from local storage.
-        const auth = localStorage.getItem('authState');
-        console.log("auth", auth)
-        if (auth) {
-            const _authState = JSON.parse(auth) as IAuthState;
-            console.log('from local storage', _authState);
-            setAuthState({
-                ...authState,
-                jwt_token: _authState.jwt_token,
-                username: _authState.username
-            });
-            console.log('stored to state')
-        }
+        if (authState === null || authState === undefined) return;
+        window.localStorage.setItem('authState', JSON.stringify(authState));
+    }, [authState])
+
+    useEffect(() => {
+        getAuth()
+            .then(authState => {
+                setAuthState({
+                    ...authState,
+                    jwt_token: authState.jwt_token,
+                    username: authState.username
+                });
+            })
+            .catch(err => setAuthState(err)); // error is null in this case.
     }, [])
 
     return <AuthContext.Provider value={{
