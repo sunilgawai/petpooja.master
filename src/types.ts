@@ -58,6 +58,11 @@ export interface ITable {
     Cart: ICart;
 }
 
+export interface IAuthState {
+    username: string;
+    jwt_token: string;
+}
+
 export interface ICart {
     id?: number;
     customer_first_name?: string;

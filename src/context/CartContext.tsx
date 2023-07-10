@@ -34,7 +34,6 @@ const CartContextProvider = ({ children }: { children: ReactNode }) => {
     useEffect(() => {
         const _active = cartTables.find(table => table.id === activeTable.id);
         if (!_active || !_active.Cart) return;
-        console.log("active table", _active)
 
         ApiService.setCart(_active).then(res => console.log(res.data)).catch(error => console.log(error))
     }, [cartTables])
